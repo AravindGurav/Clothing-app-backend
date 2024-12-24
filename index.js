@@ -181,7 +181,7 @@ app.get("/api/wishlist/products", async (req, res) => {
     if (items.length != 0) {
       res.json(items)
     } else {
-      res.status(200).json({ message: "No products in the Database" })
+      res.status(200).json(items)
     }
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch items" })
