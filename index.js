@@ -176,51 +176,50 @@ async function readAllWishlistItems() {
 
 
 app.get("/api/wishlist/products", async (req, res) => {
-     try {
-          const items = await readAllWishlistItems()
-          if (items.length != 0) {
-               res.json(items)
-          } else {
-               res.status(404).json({error: "Items not found"})
-          }
-     } catch (error) {
-          res.status(500).json({message: "Failed to fetch items"})
-     }
+  try {
+    const items = await readAllWishlistItems()
+    if (items.length != 0) {
+      res.json(items)
+    } else {
+      res.status(200).json({ message: "No products in the Database" })
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch items" })
+  }
 })
-
 
 //writing an api to get a product by its id
 async function readWishlistProductById(productId) {
-     try {
-          const product = await Wishlist.findById(productId)
-          return product
-     } catch (error) {
-          console.log(error)
-     }
+  try {
+    const product = await Wishlist.findById(productId)
+    return product
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 app.get("/api/wishlist/products/:id", async (req, res) => {
-     try {
-          const product = await readWishlistProductById(req.params.id)
+  try {
+    const product = await readWishlistProductById(req.params.id)
 
-          if (product) {
-               res.json(product)
-          } else {
-               res.status(404).json({message: "Product not found"})
-          }
-     } catch (error) {
-          res.status(500).json({error: "Failed to get the item"})
-     }
+    if (product) {
+      res.json(product)
+    } else {
+      res.status(404).json({ message: "Product not found" })
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Failed to get the item" })
+  }
 })
 
 //writing an api to delete a product by its id
 async function deleteWishlistProductById(productId) {
-     try {
-          const product = await Wishlist.findByIdAndDelete(productId)
-          return product
-     } catch (error) {
-          console.log(error)
-     }
+  try {
+    const product = await Wishlist.findByIdAndDelete(productId)
+    return product
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 //writing a delete api to delete a movie
@@ -236,95 +235,84 @@ app.delete("/api/wishlist/products/:productId", async (req, res) => {
   }
 })
 
-
-
-
-
-
-
-
 //Cart
 
 //function to save an entry into the DB
 async function createCartEntry(newItem) {
-     try {
-          const item = new Cart(newItem)
-          const saveItem =await item.save()
-          console.log("Saved Item: ", saveItem)
-           return saveItem
-     } catch (error) {
-          console.log("Error in saving the clothing item ",error)
-     }
+  try {
+    const item = new Cart(newItem)
+    const saveItem = await item.save()
+    console.log("Saved Item: ", saveItem)
+    return saveItem
+  } catch (error) {
+    console.log("Error in saving the clothing item ", error)
+  }
 }
 
 // createCartEntry(newItem)
 
 //writing a post call to save data into db
 app.post("/api/cart/products", async (req, res) => {
-     try {
-          const savedItem = await createCartEntry(req.body)
-          res.status(201).json({
-               message: "Item added successfulyy.",
-               item: savedItem
-          })
-     } catch (error) {
-          res.status(500).json({error: "Failed to add movie"})
-     }
+  try {
+    const savedItem = await createCartEntry(req.body)
+    res.status(201).json({
+      message: "Item added successfulyy.",
+      item: savedItem,
+    })
+  } catch (error) {
+    res.status(500).json({ error: "Failed to add movie" })
+  }
 })
 
 //writing a get api for fetching all products
 async function readAllCartItems() {
-     try {
-          const allItems = await Cart.find()
-          // console.log(allItems)
-          return allItems
-     } catch (error) {
-          throw error
-     }
+  try {
+    const allItems = await Cart.find()
+    // console.log(allItems)
+    return allItems
+  } catch (error) {
+    throw error
+  }
 }
 
-
-
 app.get("/api/cart/products", async (req, res) => {
-     try {
-          const items = await readAllCartItems()
-          if (items.length != 0) {
-               res.json(items)
-          } else {
-               res.status(404).json({error: "Items not found"})
-          }
-     } catch (error) {
-          res.status(500).json({message: "Failed to fetch items"})
-     }
+  try {
+    const items = await readAllCartItems()
+    if (items.length != 0) {
+      res.json(items)
+    } else {
+      res.status(200).json(items)
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch items" })
+  }
 })
-
 
 //writing an api to get a product by its id
 async function readCartProductById(productId) {
-     try {
-          const product = await Cart.findById(productId)
-          return product
-     } catch (error) {
-          console.log(error)
-     }
+  try {
+    const product = await Cart.findById(productId)
+    return product
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 app.get("/api/cart/products/:id", async (req, res) => {
-     try {
-          const product = await readCartProductById(req.params.id)
+  try {
+    const product = await readCartProductById(req.params.id)
 
-          if (product) {
-               res.json(product)
-          } else {
-               res.status(404).json({message: "Product not found"})
-          }
-     } catch (error) {
-          res.status(500).json({error: "Failed to get the item"})
-     }
+    if (product) {
+      res.json(product)
+    } else {
+      res.status(404).json({ message: "Product not found" })
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Failed to get the item" })
+  }
 })
 
-
- // Function to update the quantity of a cart product by its ID
+// Function to update the quantity of a cart product by its ID
 // async function updateCartProductQuantity(productId, newQuantity) {
 //   try {
 //     const updatedProduct = await Cart.findByIdAndUpdate(
@@ -341,9 +329,9 @@ app.get("/api/cart/products/:id", async (req, res) => {
 async function updateCartProductById(productId, dataToUpdate) {
   try {
     const updatedProduct = await Cart.findByIdAndUpdate(
-      productId, 
+      productId,
       dataToUpdate, // Fields to update
-      { new: true } 
+      { new: true }
     )
     return updatedProduct
   } catch (error) {
@@ -351,7 +339,6 @@ async function updateCartProductById(productId, dataToUpdate) {
     throw error
   }
 }
-
 
 // API to update the quantity of a cart product
 // app.post("/api/cart/products/:productId", async (req, res) => {
@@ -374,8 +361,8 @@ async function updateCartProductById(productId, dataToUpdate) {
 //   }
 // });
 app.post("/api/cart/products/:productId", async (req, res) => {
-  const { productId } = req.params 
-  const dataToUpdate = req.body  
+  const { productId } = req.params
+  const dataToUpdate = req.body
 
   try {
     const updatedProduct = await updateCartProductById(productId, dataToUpdate)
@@ -393,20 +380,16 @@ app.post("/api/cart/products/:productId", async (req, res) => {
   }
 })
 
-
-
-
 //writing an api to delete a product by its id
 async function deleteCartProductById(productId) {
-     try {
-          const product = await Cart.findByIdAndDelete(productId)
-          return product
-     } catch (error) {
-          console.log(error)
-     }
+  try {
+    const product = await Cart.findByIdAndDelete(productId)
+    return product
+  } catch (error) {
+    console.log(error)
+  }
 }
 
-//writing a delete api to delete a movie
 app.delete("/api/cart/products/:productId", async (req, res) => {
   try {
     const deletedProduct = await deleteCartProductById(req.params.productId)
@@ -419,6 +402,28 @@ app.delete("/api/cart/products/:productId", async (req, res) => {
   }
 })
 
+//writing a delete api to delete all products in the db
+async function deleteAllCartProducts() {
+  try {
+    const result = await Cart.deleteMany()
+    return result
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+app.delete("/api/cart/products", async (req, res) => {
+  try {
+    const result = await deleteAllCartProducts()
+
+    res.status(200).json({
+      message: "All products deleted successfully.",
+      deletedProducts: result,
+    })
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete all products" })
+  }
+})
 
 //writing apis for address
 
@@ -433,16 +438,15 @@ const newAddress = {
   phoneNumber: "123-456-7890",
 }
 
-
 // Function to save an entry into the Address DB
 async function createAddressEntry(newItem) {
   try {
-    const item = new Address(newItem);
-    const saveItem = await item.save();
-    console.log("Saved Address: ", saveItem);
-    return saveItem;
+    const item = new Address(newItem)
+    const saveItem = await item.save()
+    console.log("Saved Address: ", saveItem)
+    return saveItem
   } catch (error) {
-    console.log("Error in saving the address item ", error);
+    console.log("Error in saving the address item ", error)
   }
 }
 
@@ -451,67 +455,63 @@ async function createAddressEntry(newItem) {
 // POST API to save data into the Address DB
 app.post("/api/address", async (req, res) => {
   try {
-    const savedItem = await createAddressEntry(req.body);
+    const savedItem = await createAddressEntry(req.body)
     res.status(201).json({
       message: "Address added successfully.",
       item: savedItem,
-    });
+    })
   } catch (error) {
-    res.status(500).json({ error: "Failed to add address" });
+    res.status(500).json({ error: "Failed to add address" })
   }
-});
-
+})
 
 //to read all addresses
 
 async function readAllAddresses() {
   try {
-    const allItems = await Address.find();
-    return allItems;
+    const allItems = await Address.find()
+    return allItems
   } catch (error) {
-    throw error;
+    throw error
   }
 }
 
 app.get("/api/address", async (req, res) => {
   try {
-    const items = await readAllAddresses();
+    const items = await readAllAddresses()
     if (items.length !== 0) {
-      res.json(items);
+      res.json(items)
     } else {
-      res.status(404).json({ error: "Addresses not found" });
+      res.status(404).json({ error: "Addresses not found" })
     }
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch addresses" });
+    res.status(500).json({ message: "Failed to fetch addresses" })
   }
-});
-
+})
 
 //getting address by its id
 
 async function readAddressById(addressId) {
   try {
-    const address = await Address.findById(addressId);
-    return address;
+    const address = await Address.findById(addressId)
+    return address
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
 }
 
 app.get("/api/address/:id", async (req, res) => {
   try {
-    const address = await readAddressById(req.params.id);
+    const address = await readAddressById(req.params.id)
     if (address) {
-      res.json(address);
+      res.json(address)
     } else {
-      res.status(404).json({ message: "Address not found" });
+      res.status(404).json({ message: "Address not found" })
     }
   } catch (error) {
-    res.status(500).json({ error: "Failed to get the address" });
+    res.status(500).json({ error: "Failed to get the address" })
   }
-});
-
-
+})
 
 //updating the address by its id
 
@@ -520,55 +520,54 @@ async function updateAddressById(addressId, dataToUpdate) {
     const updatedAddress = await Address.findByIdAndUpdate(
       addressId,
       dataToUpdate,
-      { new: true } 
-    );
-    return updatedAddress;
+      { new: true }
+    )
+    return updatedAddress
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
 }
 
-
 app.post("/api/address/:id", async (req, res) => {
   try {
-    const updatedAddress = await updateAddressById(req.params.id, req.body);
+    const updatedAddress = await updateAddressById(req.params.id, req.body)
     if (updatedAddress) {
       res.status(200).json({
         message: "Address updated successfully.",
         updatedAddress,
-      });
+      })
     } else {
-      res.status(404).json({ error: "Address not found" });
+      res.status(404).json({ error: "Address not found" })
     }
   } catch (error) {
-    res.status(500).json({ error: "Failed to update address" });
+    res.status(500).json({ error: "Failed to update address" })
   }
-});
-
+})
 
 //delete an address by its id
 
 async function deleteAddressById(addressId) {
   try {
-    const address = await Address.findByIdAndDelete(addressId);
-    return address;
+    const address = await Address.findByIdAndDelete(addressId)
+    return address
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
 }
 
-
 app.delete("/api/address/:id", async (req, res) => {
   try {
-    const deletedAddress = await deleteAddressById(req.params.id);
+    const deletedAddress = await deleteAddressById(req.params.id)
     res.status(200).json({
       message: "Address deleted successfully.",
       Item: deletedAddress,
-    });
+    })
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete address" });
+    res.status(500).json({ error: "Failed to delete address" })
   }
-});
+})
 
+
+    
 
 
