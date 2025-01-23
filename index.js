@@ -39,6 +39,9 @@ const Cart = require("./models/cart.models")
 //import Address model
 const Address = require("./models/address.models")
 
+//import Order model
+const Order = require("./models/order.models")
+
 
 
 //function to save an entry into the DB
@@ -567,7 +570,132 @@ app.delete("/api/address/:id", async (req, res) => {
   }
 })
 
+//My Orders
+const sampleOrder = {
+  items: [
+    { name: "T-shirt", quantity: 2, price: 500 },
+    { name: "Jeans", quantity: 1, price: 1200 },
+  ],
+  totalAmount: 2200,
+  user: "Harsh Sharma",
+  addressLocation: "Home",
+  street: "123 Main Street",
+  city: "New York",
+  state: "NY",
+  country: "USA",
+  postalCode: "10001",
+  phoneNumber: "1234567890",
+}
 
+// Call the function to save the order
+createOrderEntry(sampleOrder)
+
+
+// Function to save an order into the DB
+async function createOrderEntry(newOrder) {
+  try {
+    const order = new Order(newOrder);
+    const savedOrder = await order.save();
+    console.log("Saved Order:", savedOrder);
+    return savedOrder;
+  } catch (error) {
+    console.log("Error in saving the order:", error);
+    throw error;
+  }
+}
+
+// Add a POST API to save an order
+app.post("/api/orders", async (req, res) => {
+  try {
+    const savedOrder = await createOrderEntry(req.body);
+    res.status(201).json({
+      message: "Order added successfully.",
+      order: savedOrder,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to add order" });
+  }
+});
+
+// Function to fetch all orders
+async function readAllOrders() {
+  try {
+    const allOrders = await Order.find();
+    return allOrders;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// Add a GET API to fetch all orders
+app.get("/api/orders", async (req, res) => {
+  try {
+    const orders = await readAllOrders();
+    if (orders.length !== 0) {
+      res.json(orders);
+    } else {
+      res.status(404).json({ error: "Orders not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch orders" });
+  }
+});
+
+// Add a GET API to fetch an order by its ID
+async function readOrderById(orderId) {
+  try {
+    const order = await Order.findById(orderId);
+    return order;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+app.get("/api/orders/:id", async (req, res) => {
+  try {
+    const order = await readOrderById(req.params.id);
+
+    if (order) {
+      res.json(order);
+    } else {
+      res.status(404).json({ message: "Order not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Failed to get the order" });
+  }
+});
     
+
+
+// Function to delete an order by ID
+async function deleteOrderById(orderId) {
+  try {
+    const deletedOrder = await Order.findByIdAndDelete(orderId);
+    return deletedOrder;
+  } catch (error) {
+    console.log("Error in deleting the order:", error);
+    throw error;
+  }
+}
+
+// Add a DELETE API to remove an order
+app.delete("/api/orders/:id", async (req, res) => {
+  try {
+    const deletedOrder = await deleteOrderById(req.params.id);
+
+    if (deletedOrder) {
+      res.json({
+        message: "Order deleted successfully.",
+        order: deletedOrder,
+      });
+    } else {
+      res.status(404).json({ message: "Order not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete the order" });
+  }
+});
+
 
 
