@@ -571,24 +571,24 @@ app.delete("/api/address/:id", async (req, res) => {
 })
 
 //My Orders
-const sampleOrder = {
-  items: [
-    { name: "T-shirt", quantity: 2, price: 500 },
-    { name: "Jeans", quantity: 1, price: 1200 },
-  ],
-  totalAmount: 2200,
-  user: "Harsh Sharma",
-  addressLocation: "Home",
-  street: "123 Main Street",
-  city: "New York",
-  state: "NY",
-  country: "USA",
-  postalCode: "10001",
-  phoneNumber: "1234567890",
-}
+// const sampleOrder = {
+//   items: [
+//     { name: "T-shirt", quantity: 2, price: 500 },
+//     { name: "Jeans", quantity: 1, price: 1200 },
+//   ],
+//   totalAmount: 2200,
+//   user: "Harsh Sharma",
+//   addressLocation: "Home",
+//   street: "123 Main Street",
+//   city: "New York",
+//   state: "NY",
+//   country: "USA",
+//   postalCode: "10001",
+//   phoneNumber: "1234567890",
+// }
 
 // Call the function to save the order
-createOrderEntry(sampleOrder)
+// createOrderEntry(sampleOrder)
 
 
 // Function to save an order into the DB
